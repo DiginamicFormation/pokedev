@@ -1,0 +1,128 @@
+.carousel {
+  display: grid;
+  gap: 1rem;
+}
+.stage {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  aspect-ratio: 1;
+  padding: 0;
+  border-radius: 50%;
+}
+.arrow svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Fenêtre du carrousel : les fiches entrante et sortante s'y superposent. */
+.viewport {
+  --slide-duration: 450ms;
+  --slide-easing: cubic-bezier(0.65, 0, 0.35, 1);
+  --slide-offset: calc(100% + 1rem);
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+}
+.slide {
+  grid-area: 1 / 1;
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  border: 2px solid var(--type-color);
+  border-radius: 0.75rem;
+  text-align: center;
+}
+.slide > * {
+  margin: 0;
+}
+/* Classes posées par animate.enter / animate.leave le temps de l'animation. */
+.slide-enter {
+  animation: slide-from-right var(--slide-duration) var(--slide-easing);
+}
+.slide-leave {
+  animation: slide-to-left var(--slide-duration) var(--slide-easing) forwards;
+}
+.backward .slide-enter {
+  animation-name: slide-from-left;
+}
+.backward .slide-leave {
+  animation-name: slide-to-right;
+}
+@keyframes slide-from-right {
+  from {
+    transform: translateX(var(--slide-offset));
+  }
+}
+@keyframes slide-from-left {
+  from {
+    transform: translateX(calc(-1 * var(--slide-offset)));
+  }
+}
+@keyframes slide-to-left {
+  to {
+    transform: translateX(calc(-1 * var(--slide-offset)));
+  }
+}
+@keyframes slide-to-right {
+  to {
+    transform: translateX(var(--slide-offset));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slide-enter,
+  .slide-leave {
+    animation: none;
+  }
+}
+.slide app-stat-bar {
+  grid-template-columns: auto 1fr auto;
+  width: 100%;
+  max-width: 24rem;
+  text-align: start;
+}
+.types,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+blockquote {
+  font-style: italic;
+}
+.position {
+  margin: 0;
+  color: var(--muted);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.thumb {
+  padding: 0.15rem;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background: none;
+}
+.thumb[aria-current='true'] {
+  border-color: var(--accent);
+}

@@ -1,0 +1,22 @@
+@let current = dev();
+
+@if (current && current.custom) {
+  <h1>Modifier {{ current.name }}</h1>
+
+  <app-dev-form #form [dev]="current" submitLabel="Enregistrer" (submitted)="update($event)">
+    <a actions [routerLink]="['/devs', current.id]">Annuler</a>
+  </app-dev-form>
+} @else if (current) {
+  <!-- Les devs du fichier JSON sont en lecture seule. -->
+  <app-empty-state>
+    <p>{{ current.name }} fait partie du pokédex d’origine : il ne peut pas être modifié.</p>
+    <a actions [routerLink]="['/devs', current.id]">Retour à sa fiche</a>
+  </app-empty-state>
+} @else if (isLoading()) {
+  <p role="status">Chargement…</p>
+} @else {
+  <app-empty-state>
+    <p>Aucun dev ne porte le numéro {{ id() | dexNumber }}.</p>
+    <a actions routerLink="/devs">Retour au pokédex</a>
+  </app-empty-state>
+}

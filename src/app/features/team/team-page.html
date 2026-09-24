@@ -1,0 +1,62 @@
+<h1>Mon équipe ({{ team.size() }}/{{ maxSize }})</h1>
+
+<div class="stats">
+  <!-- Score total de l'équipe, lu depuis le computed total() du service Team. -->
+  <app-stat-bar
+    [label]="'Total équipe'"
+    [value]="team.total()"
+    [max]="maxTeamTotal"
+    [highlight]="true"
+  />
+</div>
+
+<!-- La moyenne vaut null exactement quand l'équipe est vide. -->
+@if (team.average(); as average) {
+  <ul class="members">
+    @for (dev of team.members(); track dev.id) {
+      <li>
+        <app-dev-avatar [name]="dev.name" [type]="dev.types[0]" />
+        <a [routerLink]="['/devs', dev.id]">{{ dev.id | dexNumber }} {{ dev.name }}</a>
+        <app-stat-bar
+          [label]="'Progression '"
+          [value]="dev.progression"
+          [max]="maxTeamTotal"
+          [highlight]="true"
+        />
+        <button type="button" (click)="team.toggle(dev.id)">Retirer</button>
+      </li>
+    }
+  </ul>
+
+  <section aria-labelledby="coverage-title">
+    <h2 id="coverage-title">Couverture : {{ team.coverage().length }} type(s) sur 6</h2>
+    @if (missingTypes().length > 0) {
+      <p>
+        Il manque :
+        @for (type of missingTypes(); track type; let last = $last) {
+          {{ type | typeLabel }}{{ last ? '.' : ', ' }}
+        }
+      </p>
+    } @else {
+      <p>Tous les types sont couverts.</p>
+    }
+  </section>
+
+  <section aria-labelledby="average-title">
+    <h2 id="average-title">Moyenne de l'équipe · total {{ average | totalStats | number }}</h2>
+    <div class="stats">
+      @for (key of statKeys; track key) {
+        <app-stat-bar [label]="statLabels[key]" [value]="average[key]" />
+      }
+    </div>
+  </section>
+
+  <p><button type="button" (click)="team.clear()">Vider l'équipe</button></p>
+} @else {
+  <app-empty-state>
+    <p>Votre équipe est vide.</p>
+    <a actions routerLink="/devs">Choisir des devs dans le pokédex</a>
+  </app-empty-state>
+}
+
+<app-backup-panel />

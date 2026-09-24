@@ -1,0 +1,17 @@
+# Fins de ligne Unix (LF) pour tous les fichiers texte, à l'extraction comme au commit,
+# quel que soit le réglage core.autocrlf de chaque poste (true par défaut sous Windows).
+* text=auto eol=lf
+
+# Fichiers binaires : jamais convertis.
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+
+# Scripts Windows (cmd.exe) : fins de ligne CRLF.
+*.cmd text eol=crlf
+*.bat text eol=crlf

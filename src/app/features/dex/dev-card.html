@@ -1,0 +1,30 @@
+<article class="card" [class.in-team]="inTeam()">
+  <app-dev-avatar [name]="dev().name" [type]="dev().types[0]" />
+  <div class="body">
+    <p class="number">{{ dev().id | dexNumber }}</p>
+    <h3>
+      <a [routerLink]="['/devs', dev().id]">{{ dev().name }}</a>
+    </h3>
+    <p class="title">{{ dev().title }}</p>
+    <p class="types">
+      @for (type of dev().types; track type) {
+        <app-type-badge [type]="type" />
+      }
+    </p>
+    <p class="total"><app-rank-label [total]="total()" /></p>
+  </div>
+  <button
+    type="button"
+    [disabled]="alreadyInPc()"
+    [attr.aria-pressed]="inTeam()"
+    (click)="teamToggled.emit(dev().id)"
+  >
+    @if (inTeam()) {
+      Retirer de l’équipe
+    } @else if (alreadyInPc()) {
+      Déjà au PC
+    } @else {
+      Ajouter à l’équipe
+    }
+  </button>
+</article>

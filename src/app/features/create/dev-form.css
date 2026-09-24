@@ -1,0 +1,29 @@
+form {
+  display: grid;
+  gap: 1rem;
+  max-width: 36rem;
+}
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+.field p {
+  margin: 0;
+}
+.row,
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+}
+fieldset {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}

@@ -1,0 +1,40 @@
+.card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+.card.in-team {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.body > * {
+  margin: 0;
+}
+.number {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+h3 a {
+  color: inherit;
+}
+.title {
+  font-size: 0.9rem;
+}
+.types {
+  display: flex;
+  gap: 0.25rem;
+  margin-block: 0.4rem;
+}
+.total {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+button {
+  grid-column: 1 / -1;
+  align-self: end;
+}

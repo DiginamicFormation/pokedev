@@ -1,0 +1,120 @@
+@let current = dev();
+
+<article [appTypeColor]="current.types[0]">
+  <header class="identity">
+    <app-dev-avatar [name]="current.name" [type]="current.types[0]" style="--avatar-size: 6rem" />
+    <div>
+      <p class="muted">{{ current.id | dexNumber }}</p>
+      <h1>{{ current.name }}</h1>
+      <p>{{ current.title }}</p>
+      <p class="types">
+        @for (type of current.types; track type) {
+          <app-type-badge [type]="type" />
+        }
+      </p>
+    </div>
+  </header>
+
+  <blockquote>« {{ current.catchphrase }} »</blockquote>
+
+  <div class="stats">
+    <app-stat-bar
+      [label]="'Progression '"
+      [value]="current.stats | totalStats"
+      [max]="maxTotal"
+      [highlight]="true"
+    />
+  </div>
+
+  <section aria-labelledby="stats-title">
+    <h2 id="stats-title">Statistiques</h2>
+    <div class="stats">
+      @for (key of statKeys; track key) {
+        <app-stat-bar
+          [label]="statLabels[key]"
+          [value]="current.stats[key]"
+          [highlight]="focusedStat() === key"
+        />
+      }
+    </div>
+
+    <div class="stat-picker" role="group" aria-label="Statistique mise en avant">
+      @for (key of statKeys; track key) {
+        <button
+          type="button"
+          [attr.aria-pressed]="focusedStat() === key"
+          (click)="focusedStat.set(key)"
+        >
+          {{ statLabels[key] }}
+        </button>
+      }
+    </div>
+    @let focused = focusedStat();
+    <p>
+      {{ statLabels[focused] }} : {{ current.stats[focused] }}/100, rang {{ focusedRank() }} sur
+      {{ devCount() }}.
+    </p>
+  </section>
+
+  <section aria-labelledby="languages-title">
+    <h2 id="languages-title">Langages</h2>
+    <ul class="languages">
+      @for (language of current.languages; track language) {
+        <li>{{ language }}</li>
+      } @empty {
+        <li class="muted">Aucun langage renseigné.</li>
+      }
+    </ul>
+  </section>
+
+  @if (previous() || next()) {
+    <section aria-labelledby="evolution-title">
+      <h2 id="evolution-title">Évolution</h2>
+      <p class="evolution">
+        @if (previous(); as before) {
+          <a [routerLink]="['/devs', before.id]">← {{ before.name }}</a>
+        }
+        <strong>{{ current.name }}</strong>
+        @if (next(); as after) {
+          <a [routerLink]="['/devs', after.id]">{{ after.name }} →</a>
+        }
+      </p>
+    </section>
+  }
+
+  @let alreadyInPc = !team.has(current.id) && team.isFull() && pc.has(current.id);
+  <p class="actions">
+    <button type="button" [disabled]="alreadyInPc" (click)="toggleTeam(current.id)">
+      @if (team.has(current.id)) {
+        Retirer de l’équipe
+      } @else if (alreadyInPc) {
+        Déjà au PC
+      } @else {
+        Ajouter à l’équipe
+      }
+    </button>
+    @if (current.custom) {
+      <a [routerLink]="['/devs', current.id, 'modifier']">Modifier</a>
+      <button type="button" class="danger" (click)="remove(current)">Supprimer</button>
+    } @else {
+      <span class="muted">Dev du pokédex d’origine : ni modifiable, ni supprimable.</span>
+    }
+  </p>
+
+  @defer (on viewport) {
+    <section aria-labelledby="same-type-title">
+      <h2 id="same-type-title">Du même type</h2>
+      <ul class="same-type">
+        @for (other of sameType(); track other.id) {
+          <li>
+            <a [routerLink]="['/devs', other.id]">{{ other.id | dexNumber }} {{ other.name }}</a>
+          </li>
+        } @empty {
+          <li class="muted">Aucun autre dev de ce type.</li>
+        }
+      </ul>
+    </section>
+  } @placeholder {
+    <p class="muted">Devs du même type…</p>
+  }
+</article>

@@ -1,0 +1,87 @@
+<form (submit)="save($event)" novalidate>
+  <div class="field">
+    <label for="name">Nom</label>
+    <input id="name" type="text" [formField]="devForm.name" />
+    @if (devForm.name().touched()) {
+      @for (error of devForm.name().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    }
+  </div>
+
+  <div class="field">
+    <label for="title">Poste</label>
+    <input id="title" type="text" [formField]="devForm.title" />
+    @if (devForm.title().touched()) {
+      @for (error of devForm.title().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    }
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label for="primaryType">Type principal</label>
+      <select id="primaryType" [formField]="devForm.primaryType">
+        @for (type of types; track type) {
+          <option [value]="type">{{ type | typeLabel }}</option>
+        }
+      </select>
+    </div>
+    <div class="field">
+      <label for="secondaryType">Type secondaire</label>
+      <select id="secondaryType" [formField]="devForm.secondaryType">
+        <option value="">Aucun</option>
+        @for (type of types; track type) {
+          <option [value]="type">{{ type | typeLabel }}</option>
+        }
+      </select>
+      @for (error of devForm.secondaryType().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    </div>
+  </div>
+
+  <fieldset>
+    <legend>Statistiques · total {{ total() }}/{{ maxTotal }}</legend>
+    <div class="stats">
+      @for (key of statKeys; track key) {
+        <div class="field">
+          <label [for]="'stat-' + key">{{ statLabels[key] }}</label>
+          <input [id]="'stat-' + key" type="number" [formField]="devForm.stats[key]" />
+          @for (error of devForm.stats[key]().errors(); track error.kind) {
+            <p class="error">{{ error.message }}</p>
+          }
+        </div>
+      }
+    </div>
+    @for (error of devForm.stats().errors(); track error.kind) {
+      <p class="error">{{ error.message }}</p>
+    }
+  </fieldset>
+
+  <div class="field">
+    <label for="languages">Langages (séparés par des virgules)</label>
+    <input id="languages" type="text" [formField]="devForm.languages" />
+    @if (devForm.languages().touched()) {
+      @for (error of devForm.languages().errors(); track error.kind) {
+        <p class="error">{{ error.message }}</p>
+      }
+    }
+  </div>
+
+  <div class="field">
+    <label for="catchphrase">Phrase fétiche</label>
+    <textarea id="catchphrase" rows="2" [formField]="devForm.catchphrase"></textarea>
+    @for (error of devForm.catchphrase().errors(); track error.kind) {
+      <p class="error">{{ error.message }}</p>
+    }
+  </div>
+
+  <p class="actions">
+    <button type="submit" [disabled]="devForm().invalid() || devForm().submitting()">
+      {{ submitLabel() }}
+    </button>
+    <ng-content select="[actions]" />
+  </p>
+</form>

@@ -1,0 +1,14 @@
+/* Formulaires de connexion et d'inscription. */
+form {
+  display: grid;
+  gap: 1rem;
+  max-width: 22rem;
+}
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+.field p,
+.actions {
+  margin: 0;
+}

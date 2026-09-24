@@ -1,0 +1,4 @@
+{
+  // Fins de ligne Unix pour les nouveaux fichiers, comme l'imposent .gitattributes et .editorconfig.
+  "files.eol": "\n"
+}

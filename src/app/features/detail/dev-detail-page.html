@@ -1,0 +1,10 @@
+@if (dev(); as current) {
+  <app-dev-profile [dev]="current" />
+} @else if (isLoading()) {
+  <p role="status">Chargement…</p>
+} @else {
+  <app-empty-state>
+    <p>Aucun dev ne porte le numéro {{ id() | dexNumber }}.</p>
+    <a actions routerLink="/devs">Retour au pokédex</a>
+  </app-empty-state>
+}

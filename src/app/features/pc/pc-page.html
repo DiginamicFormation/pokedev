@@ -1,0 +1,114 @@
+<h1 id="pc-title">Mon PC ({{ count() }})</h1>
+<p class="muted">
+  Les devs recrutés quand l'équipe était pleine attendent ici. Équipe : {{ team.size() }}/{{
+    maxTeamSize
+  }}.
+</p>
+
+@if (current(); as dev) {
+  <section class="carousel" aria-roledescription="carrousel" aria-labelledby="pc-title">
+    <div class="stage">
+      <button
+        type="button"
+        class="arrow"
+        aria-label="Dev précédent"
+        [disabled]="count() < 2"
+        (click)="show(index() - 1)"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+      </button>
+
+      <div class="viewport" [class.backward]="direction() === 'previous'" aria-live="polite">
+        <!-- Un @for sur un seul dev : quand il change, l'article est recréé,
+             ce qui joue l'animation de sortie de l'ancien et d'entrée du nouveau. -->
+        @for (slide of [dev]; track slide.id) {
+          <article
+            class="slide"
+            animate.enter="slide-enter"
+            animate.leave="slide-leave"
+            [appTypeColor]="slide.types[0]"
+            aria-roledescription="diapositive"
+            [attr.aria-label]="index() + 1 + ' sur ' + count()"
+          >
+            <app-dev-avatar
+              [name]="slide.name"
+              [type]="slide.types[0]"
+              style="--avatar-size: 6rem"
+            />
+            <p class="muted">{{ slide.id | dexNumber }}</p>
+            <h2>
+              <a [routerLink]="['/devs', slide.id]">{{ slide.name }}</a>
+            </h2>
+            <p>{{ slide.title }}</p>
+            <p class="types">
+              @for (type of slide.types; track type) {
+                <app-type-badge [type]="type" />
+              }
+            </p>
+            <blockquote>« {{ slide.catchphrase }} »</blockquote>
+            <app-stat-bar
+              [label]="'Total'"
+              [value]="slide.stats | totalStats"
+              [max]="maxTotal"
+              [highlight]="true"
+            />
+
+            <p class="actions">
+              <button type="button" [disabled]="team.isFull()" (click)="team.toggle(slide.id)">
+                Ajouter à l’équipe
+              </button>
+              <button type="button" (click)="pc.remove(slide.id)">Retirer du PC</button>
+            </p>
+            @if (team.isFull()) {
+              <p class="muted">Équipe pleine : retirez un membre pour récupérer ce dev.</p>
+            }
+          </article>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="arrow"
+        aria-label="Dev suivant"
+        [disabled]="count() < 2"
+        (click)="show(index() + 1)"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+      </button>
+    </div>
+
+    <p class="position">{{ index() + 1 }} / {{ count() }}</p>
+
+    <ul class="box" aria-label="Devs rangés dans le PC">
+      @for (member of pc.members(); track member.id; let i = $index) {
+        <li>
+          <button
+            type="button"
+            class="thumb"
+            [attr.aria-label]="member.name"
+            [attr.aria-current]="i === index() ? 'true' : null"
+            (click)="show(i)"
+          >
+            <app-dev-avatar
+              [name]="member.name"
+              [type]="member.types[0]"
+              style="--avatar-size: 2.5rem"
+            />
+          </button>
+        </li>
+      }
+    </ul>
+  </section>
+} @else if (isLoading()) {
+  <p role="status">Chargement du PC…</p>
+} @else {
+  <app-empty-state>
+    <p>Votre PC est vide.</p>
+    <p class="muted">
+      Quand votre équipe est pleine, les devs que vous voulez y ajouter peuvent être envoyés ici.
+    </p>
+    <a actions routerLink="/devs">Parcourir le pokédex</a>
+  </app-empty-state>
+}
+
+<app-backup-panel />

@@ -1,1 +1,27 @@
-<h1>Pokedev</h1>
+@if (loading.active()) {
+  <div class="progress" role="progressbar" aria-label="Chargement en cours"></div>
+}
+
+<header>
+  <a class="brand" routerLink="/devs">Pokedev</a>
+  <nav aria-label="Navigation principale">
+    <a routerLink="/devs" routerLinkActive="active" ariaCurrentWhenActive="page">Pokédex</a>
+    <a routerLink="/equipe" routerLinkActive="active" ariaCurrentWhenActive="page">
+      Mon équipe <span class="count">{{ team.size() }}</span>
+    </a>
+    <a routerLink="/pc" routerLinkActive="active" ariaCurrentWhenActive="page">
+      Mon PC <span class="count">{{ pc.size() }}</span>
+    </a>
+    <a routerLink="/creer" routerLinkActive="active" ariaCurrentWhenActive="page">Créer un dev</a>
+    <a routerLink="/compte" routerLinkActive="active" ariaCurrentWhenActive="page">Mon compte</a>
+  </nav>
+  <app-weather-widget />
+</header>
+
+<main>
+  <router-outlet />
+</main>
+
+<footer>Pokedev · un pokédex de développeurs, tous fictifs.</footer>
+
+<app-confirm-dialog />
